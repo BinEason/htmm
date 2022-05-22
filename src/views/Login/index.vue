@@ -59,9 +59,10 @@ export default {
         const res = await loginAPI(this.user)
         // console.log(res)
         setToken(res.data.data.token)
+        localStorage.setItem('refresh_token', res.data.data.refresh_token)
 
         this.$router.replace({
-          path: '/layout/home'
+          path: this.$route.query.path || '/layout/home'
         })
       } catch (err) {
         Toast({

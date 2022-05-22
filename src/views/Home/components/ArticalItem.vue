@@ -1,16 +1,22 @@
 <template>
 <div>
   <!-- 一条文章单元格 -->
-  <van-cell>
+  <van-cell >
     <!-- 标题区域的插槽 -->
     <template #title>
       <div class="title-box">
         <!-- 标题 -->
         <span>{{artlist.title}}</span>
-        <img v-if="artlist.cover.type === 1" :src="artlist.cover.images[0]" class="thumb" alt="">
+        <img v-if="artlist.cover.type === 1" v-lazy="artlist.cover.images[0]"  class="thumb" alt="">
+        <!-- <van-image :src="artlist.cover.images[0]" v-if="artlist.cover.type === 1" class="thumb"> -->
+  <!-- <template v-slot:error>加载失败</template>
+</van-image> -->
       </div>
       <div class="thumb-box"  v-if="artlist.cover.type > 1">
-        <img v-for="(imgUrl,index) in artlist.cover.images" :key="index" :src="imgUrl"  alt="" class="thumb">
+        <img v-for="(imgUrl,index) in artlist.cover.images" :key="index"  v-lazy="imgUrl" alt="" class="thumb">
+        <!-- <van-image v-for="(imgUrl,index) in artlist.cover.images" :key="index" :src="imgUrl"  alt="" class="thumb"> -->
+  <!-- <template v-slot:error>加载失败</template>
+</van-image> -->
       </div>
     </template>
     <!-- label 区域的插槽 -->
@@ -22,7 +28,7 @@
           <span>{{formate(artlist.pubdate)}}</span>
         </div>
         <!-- 反馈按钮 -->
-        <van-icon name="cross" @click="show=true"/>
+        <van-icon name="cross" @click.stop="show=true"/>
       </div>
     </template>
   </van-cell>
@@ -55,6 +61,13 @@ export default {
         // 证明点击的是反馈垃圾内容
         this.actions = secondActions
         this.bottomtext = '返回'
+      } else if (action.name === '不感兴趣') {
+        this.$emit('dislikefn', this.artlist.art_id)
+        this.show = false
+      } else {
+        this.$emit('reports', this.artlist.art_id, action.value) // 外面需要反馈类型的值
+        this.actions = firstActions
+        this.show = false
       }
     },
     cancelFn () {

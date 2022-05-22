@@ -1,8 +1,11 @@
 <template>
   <div class="home_container">
-      <router-view></router-view>
 
-         <van-tabbar v-model="active">
+      <keep-alive>
+      <router-view></router-view>
+      </keep-alive>
+
+         <van-tabbar v-model="active" >
   <van-tabbar-item replace to="/layout/home" icon="home-o">首页</van-tabbar-item>
 
   <van-tabbar-item replace to="/layout/user" icon="user-o">个人中心</van-tabbar-item>
@@ -17,6 +20,13 @@ export default {
   data () {
     return {
       active: 0
+    }
+  },
+  created () {
+    if (this.$route.fullPath === '/layout/user') {
+      this.active = 1
+    } else {
+      this.active = 0
     }
   }
 }

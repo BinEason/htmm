@@ -3,23 +3,35 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import 'amfe-flexible'
-import { NavBar, Form, Field, Button, TabbarItem, Tabbar, Icon, Tab, Tabs, Cell, List, PullRefresh, ActionSheet } from 'vant'
+import 'highlight.js/styles/default.css'
+import './allComponent.js'
 
-Vue.use(ActionSheet)
-Vue.use(PullRefresh)
-Vue.use(List)
-Vue.use(Cell)
-Vue.use(Tab)
-Vue.use(Tabs)
-Vue.use(Icon)
-Vue.use(Tabbar)
-Vue.use(TabbarItem)
-Vue.use(Button)
-Vue.use(Form)
-Vue.use(Field)
-Vue.use(NavBar)
+// 全局注册
 
 Vue.config.productionTip = false
+
+Vue.directive('focus', {
+  inserted (el) { // 被隐藏的如display:none 标签只会在第一次执行，不会执行第二次
+    if (el.nodeName === 'TEXTAREA' || el.nodeName === 'INPUT') {
+      el.focus()
+    } else {
+      const input = el.querySelector('input')
+      const textarea = el.querySelector('textarea')
+      if (input) input.focus()
+      if (textarea) textarea.focus()
+    }
+  },
+  update (el) {
+    if (el.nodeName === 'TEXTAREA' || el.nodeName === 'INPUT') {
+      el.focus()
+    } else {
+      const input = el.querySelector('input')
+      const textarea = el.querySelector('textarea')
+      if (input) input.focus()
+      if (textarea) textarea.focus()
+    }
+  }
+})
 
 new Vue({
   router,

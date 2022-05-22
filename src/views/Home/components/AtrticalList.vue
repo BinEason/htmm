@@ -11,7 +11,7 @@
     offset="50"
 
 >
-  <ArticalItem v-for="obj in arr" :key="obj.art_id" :artlist="obj" ></ArticalItem>
+  <ArticalItem v-for="obj in arr" :key="obj.art_id" :artlist="obj" @dislikefn="dislikeFn" @reports="reportFn" @click.native="itemClick(obj.art_id)"></ArticalItem>
 
 </van-list>
 </van-pull-refresh>
@@ -20,7 +20,8 @@
 
 <script>
 import ArticalItem from './ArticalItem.vue'
-import { getArticleList } from '@/api'
+import { getArticleList, disLikeArtAPI, articleReportsAPI } from '@/api'
+import { Toast } from 'vant'
 
 export default {
   props: {
@@ -46,7 +47,7 @@ export default {
         timestamp: this.timestamp
       })
       // console.log(22)
-      console.log(res)
+      // console.log(res)
       this.timestamp = res.data.data.pre_timestamp
       // console.log(this.timestamp)
       if (this.timestamp !== null) {
@@ -67,6 +68,34 @@ export default {
       this.timestamp = res.data.data.pre_timestamp
       this.arr = res.data.data.results
       this.isLoading = false
+    },
+    async dislikeFn (id) {
+      try {
+        await disLikeArtAPI({
+          artId: id
+        })
+        Toast('已提交')
+      } catch (err) {
+
+      }
+    },
+
+    async reportFn (id, value) {
+      try {
+        await articleReportsAPI({
+          target: id,
+          type: value,
+          remark: '这里是写死的'
+        })
+        Toast('已提交')
+      } catch (err) {
+
+      }
+    },
+    itemClick (id) {
+      this.$router.push({
+        path: `/detail?art_id=${id}`
+      })
     }
 
   }
